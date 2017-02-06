@@ -1,25 +1,36 @@
-# This is a template for a Ruby scraper on morph.io (https://morph.io)
-# including some code snippets below that you should find helpful
+#!/bin/env ruby
+# encoding: utf-8
+# frozen_string_literal: true
 
-# require 'scraperwiki'
-# require 'mechanize'
-#
-# agent = Mechanize.new
-#
-# # Read in a page
-# page = agent.get("http://foo.com")
-#
-# # Find somehing on the page using css selectors
-# p page.at('div.content')
-#
-# # Write out to the sqlite database using scraperwiki library
-# ScraperWiki.save_sqlite(["name"], {"name" => "susan", "occupation" => "software developer"})
-#
-# # An arbitrary query against the database
-# ScraperWiki.select("* from data where 'name'='peter'")
+require 'pry'
+require 'scraperwiki'
+require 'json'
 
-# You don't have to do things with the Mechanize or ScraperWiki libraries.
-# You can use whatever gems you want: https://morph.io/documentation/ruby
-# All that matters is that your final data is written to an SQLite database
-# called "data.sqlite" in the current working directory which has at least a table
-# called "data".
+require 'open-uri/cached'
+OpenURI::Cache.cache_path = '.cache'
+
+def scrape_json(url)
+  popolo = JSON.parse(open(url).read)
+
+  popolo.each { |p| scrape_person(p) }
+end
+
+def get_contact(type, person)
+  person['contact_details'].find(-> { {} }) { |i| i['type'] == type }['value']
+end
+
+def scrape_person(person)
+  email = get_contact('email', person)
+  data = {
+    id:           person['id'],
+    name:         person['name'],
+    email:        email,
+    birth_date:   person['birth_date'],
+    gender:       person['gender'],
+  }
+  ScraperWiki.save_sqlite(%i(id), data)
+end
+
+ScraperWiki.sqliteexecute('DELETE FROM data') rescue nil
+#scrape_json('http://localhost:8000/media_root/popolo_json/persons.json')
+scrape_json('http://www.shineyoureye.org/media_root/popolo_json/persons.json')
