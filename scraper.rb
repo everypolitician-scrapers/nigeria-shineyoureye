@@ -19,6 +19,11 @@ def get_contact(type, person)
   person['contact_details'].find(-> { {} }) { |i| i['type'] == type }['value']
 end
 
+def get_image(person)
+  img = person['images'].map { |i| i['url'] || '' }[0] rescue ''
+end
+
+
 def scrape_person(person)
   email = get_contact('email', person)
   data = {
@@ -27,6 +32,7 @@ def scrape_person(person)
     email:        email,
     birth_date:   person['birth_date'],
     gender:       person['gender'],
+    image:        get_image(person),
   }
   ScraperWiki.save_sqlite(%i(id), data)
 end
