@@ -20,7 +20,7 @@ def get_contact(type, person)
 end
 
 def get_image(person)
-  img = person['images'].map { |i| i['url'] || '' }[0] rescue ''
+  person['images'].map { |i| i['url'] || '' }[0] rescue ''
 end
 
 def parse_date(date)
@@ -36,6 +36,7 @@ end
 
 def scrape_person(person, positions)
   email = get_contact('email', person)
+
   data = {
     id:           person['id'],
     name:         person['name'],
