@@ -19,6 +19,10 @@ def get_contact(type, person)
   person['contact_details'].find(-> { {} }) { |i| i['type'] == type }['value']
 end
 
+def get_identifier(scheme, person)
+  id = person['identifiers'].find(-> { {} }) { |i| i['scheme'] == scheme }['identifier']
+end
+
 def get_image(person)
   person['images'].map { |i| i['url'] || '' }[0] rescue ''
 end
@@ -44,6 +48,7 @@ def scrape_person(person, positions)
     birth_date:   person['birth_date'],
     gender:       person['gender'],
     image:        get_image(person),
+    slug:         get_identifier('pombola-slug', person),
   }
 
   if positions[person['id']]
