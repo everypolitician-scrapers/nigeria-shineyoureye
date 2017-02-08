@@ -38,6 +38,13 @@ def get_positions(url)
   positions.find_all { |p|  ( p['role'] == 'Senator' || p['role'] == 'Federal Representative' ) && parse_date(p['end_date']) > today }.map { |p| [ p['person_id'], p ] }.to_h
 end
 
+def get_gender(person)
+  if person['gender'] == 'male' or person['gender'] == 'female'
+    return person['gender']
+  end
+  return ''
+end
+
 def scrape_person(person, positions)
   email = get_contact('email', person)
 
@@ -46,7 +53,7 @@ def scrape_person(person, positions)
     name:         person['name'],
     email:        email,
     birth_date:   person['birth_date'],
-    gender:       person['gender'],
+    gender:       get_gender(person),
     image:        get_image(person),
     slug:         get_identifier('pombola-slug', person),
   }
