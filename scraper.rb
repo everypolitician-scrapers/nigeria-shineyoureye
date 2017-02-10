@@ -56,7 +56,7 @@ def scrape_person(person, positions)
     birth_date:   person['birth_date'],
     gender:       get_gender(person),
     image:        get_image(person),
-    slug:         get_identifier('pombola-slug', person),
+    identifier__pombola_slug: get_identifier('pombola-slug', person),
   }
 
   if positions[person['id']]
