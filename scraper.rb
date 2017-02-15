@@ -16,8 +16,9 @@ def scrape_json(url, positions)
 end
 
 def get_contact(type, person)
-  # sometimes contacts are '...' instead of blank
-  person['contact_details'].find(-> { {} }) { |i| i['type'] == type }['value'].gsub('...', '') rescue ''
+  # sometimes contacts are '...' instead of blank and
+  # sometimes they are comma, space or semi-colon separated :(
+  person['contact_details'].find(-> { {} }) { |i| i['type'] == type }['value'].gsub('...', '').gsub(/[, ]+/, ';').gsub(/;+/, ';') rescue ''
 end
 
 def get_identifier(scheme, person)
