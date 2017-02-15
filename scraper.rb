@@ -32,11 +32,15 @@ def parse_date(date)
   Date.parse(date) rescue Date.today()
 end
 
+def significant_role?(role)
+  ['Senator', 'Federal Representative'].include?(role)
+end
+
 def get_positions(url)
   positions = JSON.parse(open(url).read)
   today = Date.today()
 
-  positions.find_all { |p|  ( p['role'] == 'Senator' || p['role'] == 'Federal Representative' ) && parse_date(p['end_date']) > today }.map { |p| [ p['person_id'], p ] }.to_h
+  positions.find_all { |p| significant_role?(p['role']) && parse_date(p['end_date']) > today }.map { |p| [ p['person_id'], p ] }.to_h
 end
 
 def get_gender(person)
