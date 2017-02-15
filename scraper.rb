@@ -33,7 +33,7 @@ def parse_date(date)
 end
 
 def significant_role?(role)
-  ['Senator', 'Federal Representative'].include?(role)
+  ['Senator', 'Federal Representative', 'Executive Governor'].include?(role)
 end
 
 def get_positions(url)
