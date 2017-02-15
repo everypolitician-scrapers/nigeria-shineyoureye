@@ -21,6 +21,12 @@ def get_contact(type, person)
   person['contact_details'].find(-> { {} }) { |i| i['type'] == type }['value'].gsub('...', '').gsub(/[, ]+/, ';').gsub(/;+/, ';') rescue ''
 end
 
+def get_email(person)
+  email = get_contact('email', person)
+  # throw away the email if it doesn't look valid
+  email.match('@') ? email : ''
+end
+
 def get_identifier(scheme, person)
   id = person['identifiers'].find(-> { {} }) { |i| i['scheme'] == scheme }['identifier']
 end
@@ -48,7 +54,7 @@ def get_gender(person)
 end
 
 def scrape_person(person, positions)
-  email = get_contact('email', person)
+  email = get_email(person)
 
   data = {
     id:           person['id'],
