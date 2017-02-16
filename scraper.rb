@@ -23,8 +23,11 @@ end
 
 def get_email(person)
   email = get_contact('email', person)
-  # throw away the email if it doesn't look valid
-  email.match('@') ? email : ''
+  # throw away the email if it doesn't look valid or is generic
+  unless email.match('@') and not email.match('repscontact@nass.gov.ng')
+    email = ''
+  end
+  email
 end
 
 def get_identifier(scheme, person)
