@@ -80,6 +80,6 @@ def scrape_person(person, positions)
   ScraperWiki.save_sqlite(%i(id), data)
 end
 
-ScraperWiki.sqliteexecute('DELETE FROM data') rescue nil
+ScraperWiki.sqliteexecute('DROP TABLE data') rescue nil
 positions = get_positions('http://www.shineyoureye.org/media_root/popolo_json/memberships.json')
 scrape_json('http://www.shineyoureye.org/media_root/popolo_json/persons.json', positions)
