@@ -35,7 +35,7 @@ def get_identifier(scheme, person)
 end
 
 def get_image(person)
-  person['images'].map { |i| i['url'] || '' }[0] rescue ''
+  person['images'].map { |i| i['url'].gsub(/www\.shineyoureye\.org/, 'pombola.shineyoureye.org') || '' }[0] rescue ''
 end
 
 def parse_date(date)
@@ -81,5 +81,5 @@ def scrape_person(person, positions)
 end
 
 ScraperWiki.sqliteexecute('DROP TABLE data') rescue nil
-positions = get_positions('http://www.shineyoureye.org/media_root/popolo_json/memberships.json')
-scrape_json('http://www.shineyoureye.org/media_root/popolo_json/persons.json', positions)
+positions = get_positions('http://pombola.shineyoureye.org/media_root/popolo_json/memberships.json')
+scrape_json('http://pombola.shineyoureye.org/media_root/popolo_json/persons.json', positions)
